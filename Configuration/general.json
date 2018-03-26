@@ -1,0 +1,12 @@
+{
+    "core": {
+        "prefix": "$",
+        "description": "A Python Discord Bot."
+    },
+    "API": {
+        "LibrariesIO": "TOKEN OF LIBRARIES.IO"
+    },
+    "commandsDir": "Commands",
+    "eventsDir": "Events",
+    "token": "BOT TOKEN"
+}

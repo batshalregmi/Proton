@@ -1,0 +1,6 @@
+Data
+__pycache__
+*.pyc
+.vscode
+Temp
+Classes
