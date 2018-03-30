@@ -18,17 +18,14 @@ class Information():
     async def serverinfo(self, ctx):
         """Shows information about the server"""
         guild = ctx.guild
-        online = len([m.status for m in guild.members if (m.status == discord.Status.online) or (m.status == discord.Status.idle)])
         passed = (ctx.message.created_at - guild.created_at).days
         created_at = "Since {}. That's over {} days ago!".format(guild.created_at.strftime('%d %b %Y %H:%M'), passed)
         data = discord.Embed(title='Server Information', description=created_at, colour=0x2CACD5)
         data.add_field(name='Server Name', value=guild.name, inline=True)
-        data.add_field(name="Server Region", value=guild.region.title(), inline=True)
         data.add_field(name='Members', value=guild.member_count, inline=True)
         data.add_field(name='Server ID', value=guild.id, inline=True)
-        data.add_field(name='Server Owner', value=str(guild.owner), inline=True)
+        data.add_field(name='Server Owner', value=guild.owner.name, inline=True)
         data.add_field(name='Roles', value=len(guild.roles), inline=True)
-        data.add_field(name='Members Online', value=online, inline=True)
         if guild.icon_url:
             data.set_author(name=guild.name, icon_url=guild.icon_url)
         else:
@@ -70,8 +67,7 @@ class Information():
     @commands.command(name="stats")
     async def stats(self, ctx):
         """Shows some information about the bot."""
-        process = psutil.Process(os.getpid())
-        memUsed = process.memory_info()[0] / float(2 ** 20)
+        process = psutil.Process()
         total_channels = 0
         total_users = len(self.bot.users)
         for traversal in self.bot.guilds:
@@ -83,12 +79,13 @@ class Information():
         elif os_gen_name == "Windows":
             os_name = "Windows"+ " " + str(platform.version()) + " " + str(platform.architecture)[0]
         PyVersion = str(sys.version_info[0]) + "." + str(sys.version_info[1]) + "." + str(sys.version_info[2])
+        memory_usage = process.memory_full_info().uss / 1024**2
         stats = discord.Embed(title="Bot Statistics", color=0x2CACD5)
-        stats.add_field(name="Memory Usage", value="{} MB".format(memUsed), inline=True)
+        stats.add_field(name="Memory Usage", value=f"{memory_usage:.2f} MiB", inline=True)
         stats.add_field(name="Servers", value=len(self.bot.guilds), inline=True)
         stats.add_field(name="Channels", value=total_channels, inline=True)
         stats.add_field(name="Users", value=total_users, inline=True)
-        stats.add_field(name="Discord.Py", value="v{}".format(discord.__version__), inline=True)
+        stats.add_field(name="Discord.py", value="v{}".format(discord.__version__), inline=True)
         stats.add_field(name="Python", value="v{}".format(PyVersion), inline=True)
         stats.add_field(name="OS (Generic)", value=os_name, inline=True)
         stats.set_thumbnail(url=self.bot.user.avatar_url)
