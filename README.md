@@ -5,16 +5,12 @@
 
 ### Changelog :
 ---
-    v1.1.0
-    - Huge music update: Fixed the download function to handle many songs added at once.
-                         Added `NowPlaying` command.
-                         Added `Queue` command.
-    - Added a owner cog, with the following commands :
-                         1) Unload
-                         2) Load
-                         3) Reload
-                         4) Shutdown
-    - Added a new image command : `Beautiful`
+    v1.2.0
+    - Huge music update: Added `repeat` command.
+                         Added option to search on youtube in `add` command.
+                         Added option to provide url in `add` command.
+    - Fixed a bug where anyone could use the `shutdown` command.
+    - Fixed a typo in `illegal` command help docstring.
 
 ### Libraries :
 ---
