@@ -5,6 +5,7 @@ from datetime import datetime
 import youtube_dl
 import discord
 from discord.ext import commands
+from bs4 import BeautifulSoup
 
 ytdlOpts = {
     "format": "bestaudio/best",
@@ -47,8 +48,10 @@ class MusicPlayer:
         self.queue = asyncio.Queue()
         self.DLqueue = asyncio.Queue()
         self.playing = asyncio.Event()
+        self.notdownloading = asyncio.Event()
         self.guild = ctx.guild
         self.lastSong = None
+        self.repeat = False
         self.task = self.loop.create_task(self.download())
 
     async def download(self):
@@ -56,6 +59,7 @@ class MusicPlayer:
             if self.DLqueue.empty():
                 pass
             else:
+                self.notdownloading.clear()
                 songToDL = await self.DLqueue.get()
                 func = functools.partial(ytdl.extract_info, songToDL["query"])
                 data = await self.loop.run_in_executor(None, func)
@@ -65,9 +69,10 @@ class MusicPlayer:
                 filename = await self.loop.run_in_executor(None, func2)
                 SongObject = Song(songToDL, filename, data)
                 self.unsafe_queue.append(SongObject)
-                await self.queue.put(SongObject)
+                self.queue.put_nowait(SongObject)
                 tempchannel = songToDL["channel"]
                 await tempchannel.send(f"Added `{data['title']}` to the queue. (Requested by `{songToDL['requester'].name}`).")
+                self.notdownloading.set()
             await asyncio.sleep(1)
 
     async def PlayerStart(self, channel):
@@ -75,10 +80,18 @@ class MusicPlayer:
             self.playing.clear()
             songToPlay = await self.queue.get()
             self.unsafe_queue.pop(0)
-            await asyncio.sleep(1.5)
+            await asyncio.sleep(.25)
             self.lastSong = songToPlay.fileName
             self.guild.voice_client.play(songToPlay, after=lambda error: self.loop.call_soon_threadsafe(self.playing.set))
             await channel.send(f"Now Playing : `{songToPlay.title}` as requested by `{songToPlay.songInfo['requester']}`.")
+            if self.repeat:
+                DLRequest = {
+                    "requester": songToPlay.songInfo['requester'],
+                    "channel": songToPlay.songInfo['channel'],
+                    "query": songToPlay.songInfo['query']
+                }
+                self.DLqueue.put_nowait(DLRequest)
+                await self.notdownloading.wait()
             await self.playing.wait()
             songToPlay.cleanup()
             func = functools.partial(os.remove, self.lastSong)
@@ -101,6 +114,19 @@ class Music:
             hours = 0
         return f"{hours} hours, {mins} minutes and {secsLeftOver} seconds."
 
+    def parseHTML(self, html):
+        soup = BeautifulSoup(html, "lxml")
+        vd = soup.findAll(attrs={"class": "yt-uix-tile-link"})
+        vidStr = "**Select the song :\n" + "Type just the number or `cancel` to quit.\n"
+        vidStr += "NOTE : This will terminate in `30` seconds.**\n\n"
+        vidDict = dict()
+        if len(vd) == 0:
+            return [None, None, False]
+        for i in range(3):
+            if not vd[i]['href'].startswith("https://googleads.g.doubleclick.net/‌​"):
+                vidStr += str(i + 1) + ") : **`" + vd[i].text + "`**\n"
+                vidDict[str(i + 1)] = "https://youtube.com" + vd[i]['href']
+        return [vidDict, vidStr, True]
 
     def get_player(self, ctx):
         try:
@@ -196,7 +222,7 @@ class Music:
         if ctx.voice_client.is_playing():
             return await ctx.send("Currently songs are being played.")
         player = self.get_player(ctx)
-        await player.PlayerStart(channel=ctx.message.channel)
+        await self.bot.loop.create_task(player.PlayerStart(channel=ctx.message.channel))
     
     @commands.command(name="add")
     @commands.guild_only()
@@ -205,10 +231,43 @@ class Music:
         player = self.get_player(ctx)
         if args is None:
             return await ctx.send("Please make a query!")
+        if args.startswith("https://www.youtube.com/watch?v="):
+            videoChoice = args
+        else:
+            url = f"https://youtube.com/results"
+            async with self.bot.session.get(url, params={"search_query": args}) as resp:
+                html = await resp.text()
+            func = functools.partial(self.parseHTML, html)
+            vidList = await self.bot.loop.run_in_executor(None, func)
+            if not vidList[2]:
+                return await ctx.send("Could not find any related videos.")
+            await ctx.send(vidList[1])
+            def checkmessage(msg):
+                if msg.author == ctx.author and msg.channel == ctx.channel:
+                    try:
+                        choice = int(msg.content)
+                        if choice == 1 or choice == 2 or choice == 3:
+                            return True
+                        return False
+                    except ValueError:
+                        if msg.content == "cancel":
+                            return True
+                        return False
+                else:
+                    return False
+            try:
+                choiceMsg = await self.bot.wait_for("message", timeout=30.0, check=checkmessage)
+            except asyncio.TimeoutError:
+                return await ctx.send("Cancelled the song selection due to overtime.")
+            if choiceMsg.content == "cancel":
+                return await ctx.send("Selection was cancelled.")
+            choice = int(choiceMsg.content)
+            videoChoice = vidList[0][str(choice)]
+        await ctx.send("Adding song to the queue... May take some time.")
         DLRequest = {
             "requester": ctx.author,
             "channel": ctx.message.channel,
-            "query": args
+            "query": videoChoice
         }
         await player.DLqueue.put(DLRequest)
 
@@ -239,6 +298,17 @@ class Music:
         embed.set_thumbnail(url=source.thumb)
         embed.set_footer(text=f"{self.bot.user.name} {datetime.now().strftime('%Y-%m-%d')}", icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
+
+    @commands.command(name="repeat")
+    @commands.guild_only()
+    async def _repeat(self, ctx):
+        """Flips the repeat bit."""
+        player = self.get_player(ctx)
+        if player.repeat:
+            player.repeat = False
+            return await ctx.send("Set repeat bit to False.")
+        player.repeat = True
+        await ctx.send("Set repeat bit to True.")
 
 def setup(bot):
     bot.add_cog(Music(bot))

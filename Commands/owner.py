@@ -45,6 +45,7 @@ class Owner:
             await ctx.message.add_reaction("\N{WHITE HEAVY CHECK MARK}")
 
     @commands.command(name='exit', aliases=["st", "shutdown"])
+    @commands.is_owner()
     async def _exit(self, ctx):
         """Initiate shutdown of bot."""
         await ctx.message.add_reaction("\N{WHITE HEAVY CHECK MARK}")

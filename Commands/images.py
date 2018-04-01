@@ -32,7 +32,7 @@ class Images:
 
     @commands.command(name="illegal")
     async def illegal(self, ctx, *, args=None):
-        """Ask US Presiden Donald Trump to make something illegal."""
+        """Ask US President Donald Trump to make something illegal."""
         if args is None:
             await ctx.send("Please provide something to make it illegal.")
             return
