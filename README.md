@@ -7,7 +7,7 @@
 ---
     v1.3.0
 
-        - Fixed settings command, and altered the storgae format.
+        - Fixed settings command, and altered the storage format.
         - Added fancy Welcome/Leave images.
 
 ### Libraries :
