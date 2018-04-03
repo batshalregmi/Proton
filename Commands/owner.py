@@ -51,6 +51,19 @@ class Owner:
         await ctx.message.add_reaction("\N{WHITE HEAVY CHECK MARK}")
         await self.bot.close()
 
+    @commands.command(name="dbregen")
+    @commands.is_owner()
+    async def dbregen(self, ctx):
+        """Re-create DB entry of guild."""
+        guild_create = {
+            "_id": ctx.guild.id,
+            "userLogEnabled": False,
+            "userLogChannel": None,
+            "userLogType": 1
+        }
+        await self.bot.db.guilds.insert_one(guild_create)
+        await ctx.send("DB entry regenerated.")
+
 
 def setup(bot):
     bot.add_cog(Owner(bot))

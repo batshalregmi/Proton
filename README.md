@@ -5,12 +5,10 @@
 
 ### Changelog :
 ---
-    v1.2.0
-    - Huge music update: Added `repeat` command.
-                         Added option to search on youtube in `add` command.
-                         Added option to provide url in `add` command.
-    - Fixed a bug where anyone could use the `shutdown` command.
-    - Fixed a typo in `illegal` command help docstring.
+    v1.3.0
+
+        - Fixed settings command, and altered the storgae format.
+        - Added fancy Welcome/Leave images.
 
 ### Libraries :
 ---

@@ -91,7 +91,8 @@ class MusicPlayer:
                     "query": songToPlay.songInfo['query']
                 }
                 self.DLqueue.put_nowait(DLRequest)
-                await self.notdownloading.wait()
+                if self.queue.empty():
+                    await self.notdownloading.wait()
             await self.playing.wait()
             songToPlay.cleanup()
             func = functools.partial(os.remove, self.lastSong)

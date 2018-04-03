@@ -1,34 +1,18 @@
-from functools import partial
+import functools
 import re
 import asyncio
 from io import BytesIO
 from discord.ext import commands
 import discord
 from PIL import Image
+from Utils import ImageClient
 
 
 class Images:
     
     def __init__(self, bot):
         self.bot = bot
-
-    async def get_avatar(self, user):
-        avatar_url = user.avatar_url_as(format="png", static_format="png", size=128)
-        async with self.bot.session.get(avatar_url) as resp:
-            avatar_bytes = await resp.read()
-        return avatar_bytes
-
-    def beautify(self, avatar_bytes):
-        with Image.open("Assets/Images/plate_beautiful.png") as plate:
-            with Image.open(BytesIO(avatar_bytes)) as avatar:
-                with Image.new("RGB", (497, 559)) as canvas:
-                    canvas.paste(avatar, (335, 35), mask=avatar)
-                    canvas.paste(avatar, (337, 315), mask=avatar)
-                    canvas.paste(plate, (0, 0), mask=plate)
-                    buffer = BytesIO()
-                    canvas.save(buffer, "PNG")
-        buffer.seek(0)
-        return buffer
+        self.imageClient = ImageClient.ImageClient(bot)
 
     @commands.command(name="illegal")
     async def illegal(self, ctx, *, args=None):
@@ -63,10 +47,11 @@ class Images:
         """This... this is beautiful!"""
         member = user or ctx.author
         async with ctx.typing():
-            avatar = await self.get_avatar(member)
-            func = partial(self.beautify, avatar)
+            avatar = await self.imageClient.getAvatar(user=member, size=128)
+            func = functools.partial(self.imageClient.beautify, avatar)
             image = await self.bot.loop.run_in_executor(None, func)
             await ctx.send(file=discord.File(fp=image, filename="beautiful.png"))
+
 
 def setup(bot):
     bot.add_cog(Images(bot))

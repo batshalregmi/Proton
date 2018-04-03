@@ -5,6 +5,7 @@ from discord.ext import commands
 import discord
 import motor.motor_asyncio
 
+
 with open("Configuration/general.json") as read:
     settings = json.load(read)
 
