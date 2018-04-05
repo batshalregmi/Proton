@@ -5,10 +5,11 @@
 
 ### Changelog :
 ---
-    v1.3.0
+    v1.4.0
 
-        - Fixed settings command, and altered the storage format.
-        - Added fancy Welcome/Leave images.
+        - Changed font of the image commands, now they look fancier :)
+        - Added the `delet` & `robot` image commands.
+        - Added the tag system.
 
 ### Libraries :
 ---

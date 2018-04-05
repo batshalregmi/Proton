@@ -4,8 +4,9 @@ import asyncio
 from io import BytesIO
 from discord.ext import commands
 import discord
-from PIL import Image
 from Utils import ImageClient
+import random
+
 
 
 class Images:
@@ -51,6 +52,27 @@ class Images:
             func = functools.partial(self.imageClient.beautify, avatar)
             image = await self.bot.loop.run_in_executor(None, func)
             await ctx.send(file=discord.File(fp=image, filename="beautiful.png"))
+
+    @commands.command(name="delet")
+    async def delet(self, ctx, user: discord.Member = None):
+        """Delet this garbage!"""
+        member = user or ctx.author
+        async with ctx.typing():
+            avatar = await self.imageClient.getAvatar(user=member, size=128)
+            func = functools.partial(self.imageClient.deletify, avatar, f"{member.name}#{member.discriminator}")
+            image = await self.bot.loop.run_in_executor(None, func)
+            await ctx.send(file=discord.File(fp=image, filename="delet.png"))
+
+    @commands.command(name="robot")
+    async def robot(self, ctx, *, args=None):
+        """See a unique robot image from any text."""
+        if args is None:
+            args = ctx.author.name
+        randomInt = random.randrange(1, 3)
+        async with ctx.typing():
+            image = await self.imageClient.getRobotImage(args, randomInt)
+            file = discord.File(fp=image, filename=f"{args}.png")
+            await ctx.send(file=file)
 
 
 def setup(bot):
