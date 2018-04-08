@@ -5,11 +5,11 @@
 
 ### Changelog :
 ---
-    v1.4.0
+    v1.5.0
 
-        - Changed font of the image commands, now they look fancier :)
-        - Added the `delet` & `robot` image commands.
-        - Added the tag system.
+        - Add `Animal` cog, which has two commands right now, `bird` and `dog` which fetch random images of the animal.
+        - Add `ban` and `kick` command.
+        - Add new image command, `thuglife`.
 
 ### Libraries :
 ---

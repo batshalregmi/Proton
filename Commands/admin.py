@@ -44,7 +44,40 @@ class Admin:
                 else:
                     pass
             await ctx.send("The specified key is not found.")
-            
+    
+    @commands.command(name="kick")
+    @commands.guild_only()
+    @commands.has_permissions(kick_members=True)
+    async def kick(self, ctx, user: discord.Member = None, *, reason=None):
+        """
+        Kick a person from the guild.
+        The reason should be provided after the mention or ID.
+        like so -> <prefix>kick @somebody <reason>
+        """
+        if user is None:
+            return await ctx.send("Please provide a valid Discord guild memeber!")
+        try:
+            await ctx.guild.kick(user, reason=reason)
+            await ctx.send(f"Successfully kicked `{user.name}` from `{ctx.guild.name}`.")
+        except discord.Forbidden:
+            await ctx.send(f"Could not kick `{user.name}`.")
+
+    @commands.command(name="ban")
+    @commands.guild_only()
+    @commands.has_permissions(ban_members=True)
+    async def ban(self, ctx, user: discord.Member = None, *, reason=None):
+        """
+        Ban a person from the guild.
+        The reason should be provided after the mention or ID.
+        like so -> <prefix>ban @somebody <reason>
+        """
+        if user is None:
+            return await ctx.send("Please provide a valid Discord guild memeber!")
+        try:
+            await ctx.guild.ban(user, reason=reason)
+            await ctx.send(f"Successfully banned `{user.name}` from `{ctx.guild.name}`.")
+        except discord.Forbidden:
+            await ctx.send(f"Could not ban `{user.name}`.")
 
 def setup(bot):
     bot.add_cog(Admin(bot))

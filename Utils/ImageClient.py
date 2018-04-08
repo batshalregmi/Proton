@@ -8,7 +8,7 @@ class ImageClient:
         self.bot = bot
         self.robotURL = "https://robohash.org/"
 
-    async def getAvatar(self, user, size=128):
+    async def getAvatar(self, user, size):
         """Fetch the avatar of a user."""
 
         avatar_url = user.avatar_url_as(static_format="png", format="png", size=size)
@@ -38,7 +38,7 @@ class ImageClient:
     def deletify(self, avatar_bytes, name):
         with Image.open("Assets/Images/plate_delet.png") as plate:
             with Image.open(BytesIO(avatar_bytes)) as avatar:
-                with Image.new("RGB", (400, 201)) as canvas:
+                with Image.new("RGB", (400, 201), color=(255, 255, 255)) as canvas:
                     avatar = avatar.resize((69, 69))
                     canvas.paste(avatar, (50, 80), mask=avatar)
                     canvas.paste(plate, (0, 0), mask=plate)
@@ -46,6 +46,18 @@ class ImageClient:
                     canvasDraw = ImageDraw.Draw(canvas)
                     canvasDraw.text((215, 81), name, font=font, fill=(0, 0, 0))
                     del canvasDraw
+                    buffer = BytesIO()
+                    canvas.save(buffer, "PNG")
+        buffer.seek(0)
+        return buffer
+
+    def thugLife(self, avatar_bytes):
+        with Image.open("Assets/Images/plate_thuglife.png") as plate:
+            with Image.open(BytesIO(avatar_bytes)) as avatar:
+                with Image.new("RGBA", (512, 512)) as canvas:
+                    avatar = avatar.resize((512, 512))
+                    canvas.paste(avatar, (0, 0), mask=avatar)
+                    canvas.paste(plate, (0, 0), mask=plate)
                     buffer = BytesIO()
                     canvas.save(buffer, "PNG")
         buffer.seek(0)

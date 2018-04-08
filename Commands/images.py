@@ -74,6 +74,16 @@ class Images:
             file = discord.File(fp=image, filename=f"{args}.png")
             await ctx.send(file=file)
 
+    @commands.command(name="thuglife")
+    async def thuglife(self, ctx, user: discord.Member = None):
+        """Thug Life....."""
+        member = user or ctx.author
+        async with ctx.typing():
+            avatar = await self.imageClient.getAvatar(user=member, size=512)
+            func = functools.partial(self.imageClient.thugLife, avatar)
+            image = await self.bot.loop.run_in_executor(None, func)
+            await ctx.send(file=discord.File(fp=image, filename="thuglife.png"))
+
 
 def setup(bot):
     bot.add_cog(Images(bot))
