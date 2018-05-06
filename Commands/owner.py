@@ -7,7 +7,7 @@ class Owner:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(aliases=["l"])
     @commands.is_owner()
     async def load(self, ctx, *, module):
         """Loads a module."""
@@ -19,7 +19,7 @@ class Owner:
         else:
             await ctx.message.add_reaction('\N{WHITE HEAVY CHECK MARK}')
 
-    @commands.command()
+    @commands.command(aliases=["u"])
     @commands.is_owner()
     async def unload(self, ctx, *, module):
         """Unloads a module."""
@@ -44,7 +44,7 @@ class Owner:
         else:
             await ctx.message.add_reaction("\N{WHITE HEAVY CHECK MARK}")
 
-    @commands.command(name='exit', aliases=["st", "shutdown"])
+    @commands.command(name='exit', aliases=["s", "shutdown"])
     @commands.is_owner()
     async def _exit(self, ctx):
         """Initiate shutdown of bot."""
@@ -59,11 +59,11 @@ class Owner:
             "_id": ctx.guild.id,
             "userLogEnabled": False,
             "userLogChannel": None,
-            "userLogType": 1
+            "userLogType": 1,
+            "prefix": "$"
         }
         await self.bot.db.guilds.insert_one(guild_create)
         await ctx.send("DB entry regenerated.")
-
 
 def setup(bot):
     bot.add_cog(Owner(bot))

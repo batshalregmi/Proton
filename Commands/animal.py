@@ -37,16 +37,25 @@ class Animals:
         embed.set_image(url=json[0])
         await ctx.send(embed=embed)
 
-    @commands.command(name="shibe")
+    @commands.command(name="shibe", aliases=["shiba", "inu"])
     async def shibe(self, ctx):
-        """Get a random shibe image."""
+        """Get a random shiba inu dog image."""
         url = "http://shibe.online/api/shibes"
         async with self.bot.session.get(url) as resp:
             json = await resp.json()
         embed = discord.Embed(title="Random Shibe 🐕")
         embed.set_image(url=json[0])
         await ctx.send(embed=embed)
-
+        
+    @commands.command(name="fox")
+    async def fox(self, ctx):
+        """Get a random fox image."""
+        url = "https://randomfox.ca/floof/"
+        async with self.bot.session.get(url) as resp:
+            json = await resp.json()
+        embed = discord.Embed(title="Random Fox 🦊")
+        embed.set_image(url=json["image"])
+        await ctx.send(embed=embed)
 
 
 def setup(bot):

@@ -8,7 +8,8 @@ class Guild:
             "_id": guild.id,
             "userLogEnabled": False,
             "userLogChannel": None,
-            "userLogType": 1
+            "userLogType": 1,
+            "prefix": "$"
         }
         await self.bot.db.guilds.insert_one(guild_create)
         

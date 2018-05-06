@@ -5,11 +5,12 @@
 
 ### Changelog :
 ---
-    v1.5.1
+    v1.5.2
 
-        - Change API used for `bird` command.
-        - Add `shibe` and `cat` commands under `Animals` cog.
-        - Rename `animal` cog to `animals`. 
+        - Added the feature to change the prefix in a guild.
+        - Added `comic` cog with two commands, namely `dilbert` and `garfield`.
+        - Minor bugfixes.
+        - Renamed `animals.py` cog to just `animal.py` for ease of use while loading/unloading commands.
 
 ### Libraries :
 ---

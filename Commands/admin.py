@@ -18,7 +18,8 @@ class Admin:
             basestr = f"***{ctx.message.guild.name}'s*** Settings : \n```asciidoc\n== UserLog ==\n\t"
             basestr = basestr + ":: userLogEnabled : {}\n\t".format(guildset["userLogEnabled"])
             basestr = basestr + ":: userLogChannel : {}\n\t".format(guildset["userLogChannel"])
-            basestr = basestr + ":: userLogType : {}\n```".format(guildset["userLogType"])
+            basestr = basestr + ":: userLogType : {}\n".format(guildset["userLogType"])
+            basestr = basestr + "== Core ==\n\t:: prefix : {}\n```".format(guildset["prefix"])
             await ctx.send(basestr)
         elif args.split(" ")[0] == "edit":
             try:
@@ -40,6 +41,8 @@ class Admin:
                 if keyToEdit == i:
                     guildset[i] = valueToEdit
                     await self.bot.db.guilds.replace_one({"_id": ctx.guild.id}, guildset)
+                    if keyToEdit == "prefix":
+                        self.bot.guildPrefixes[ctx.guild.id] = valueToEdit
                     return await ctx.send(f"Value of {i} set to {valueToEdit}.")
                 else:
                     pass

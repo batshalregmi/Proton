@@ -56,11 +56,12 @@ class Information():
         data = discord.Embed(title='User Information', colour=0x2CACD5)
         data.add_field(name='User Name', value=user.name, inline=True)
         data.add_field(name='Nickname', value=user_nick, inline=True)
-        data.add_field(name='User ID', value=user.id, inline=True)
         data.add_field(name='User Discrim', value="#" + str(user.discriminator), inline=True)
+        data.add_field(name='User ID', value=user.id)
         data.add_field(name='Is User Bot', value=user.bot, inline=True)
-        data.add_field(name='Account Created At', value="Since {}".format(user.created_at.strftime('%d %b %Y %H:%M')), inline=True)
+        data.add_field(name='Account Created', value="Since {}".format(user.created_at.strftime('%d %b %Y %H:%M')), inline=True)
         data.add_field(name='Status', value=user_status, inline=True)
+
         data.set_thumbnail(url=user.avatar_url)
         await ctx.send(embed=data)
 

@@ -19,15 +19,25 @@ for i in os.listdir(settings["eventsDir"]):
     if i.endswith(".py"):
         Cogs.append(f'{settings["eventsDir"]}.{i.replace(".py", "")}')
 
+async def _prefix_determiner(bot, msg):
+    try:
+        prefix = bot.guildPrefixes[msg.guild.id]
+    except KeyError:
+        guildset = await bot.db.guilds.find_one({"_id": msg.guild.id})
+        prefix = guildset["prefix"]
+        bot.guildPrefixes[msg.guild.id] = prefix
+    return prefix
+
 
 class Proton(commands.Bot):
 
     def __init__(self):
-        super().__init__(command_prefix=settings["core"]["prefix"], description=settings["core"]["description"])
+        super().__init__(command_prefix=_prefix_determiner, description=settings["core"]["description"], case_insensitive=True)
         self.session = aiohttp.ClientSession(loop=self.loop)
         self.DBClient = motor.motor_asyncio.AsyncIOMotorClient('localhost', 27017)
         self.db = self.DBClient["proton"]
         self.guildSettings = self.db["guilds"]
+        self.guildPrefixes = {}
         for extension in Cogs:
             try:
                 self.load_extension(extension)
