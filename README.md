@@ -5,12 +5,13 @@
 
 ### Changelog :
 ---
-    v1.5.2
+    v1.5.3
 
-        - Added the feature to change the prefix in a guild.
-        - Added `comic` cog with two commands, namely `dilbert` and `garfield`.
-        - Minor bugfixes.
-        - Renamed `animals.py` cog to just `animal.py` for ease of use while loading/unloading commands.
+        - Added Mention prefix feature.
+        - Fixed a critical bug where user could change `_id` in settings command.
+        - Changed configuration storage from JSON to native .py for not blocking the event loop.
+        - THIS UPDATE AND THE PREVIOUS UPDATE (1.5.2) ARE BREAKING CHANGES. YOU WILL HAVE TO HOST
+          BOT AGAIN USING INSTRUCTIONS PROVIDED AT THE DISCORD SERVER.
 
 ### Libraries :
 ---

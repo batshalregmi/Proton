@@ -141,8 +141,7 @@ class Information():
         if args is None:
             await ctx.send("Please state a package to search.")
             return
-        with open("Configuration/general.json") as read:
-            key = json.load(read)["API"]["LibrariesIO"]
+        key = self.bot.LibrariesIO
         base_url = "https://libraries.io/api/pypi/"
         query = base_url + args
         params = {"api_key" : key}

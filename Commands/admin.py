@@ -37,9 +37,11 @@ class Admin:
             except IndexError:
                 await ctx.send("Either key to edit or the value to change is not provided.")
             guildset = await self.bot.db.guilds.find_one({'_id': ctx.message.guild.id})
+            guildset.pop("_id")
             for i in guildset.keys():
                 if keyToEdit == i:
                     guildset[i] = valueToEdit
+                    guildset["_id"] = ctx.guild.id
                     await self.bot.db.guilds.replace_one({"_id": ctx.guild.id}, guildset)
                     if keyToEdit == "prefix":
                         self.bot.guildPrefixes[ctx.guild.id] = valueToEdit
