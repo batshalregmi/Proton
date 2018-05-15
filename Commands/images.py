@@ -35,8 +35,6 @@ class Images:
             async with self.bot.session.post("https://is-now-illegal.firebaseio.com/queue/tasks.json", json=payload) as resp:
                 pass
             await asyncio.sleep(5)
-            async with self.bot.session.get(f"https://is-now-illegal.firebaseio.com/gifs/{args.upper()}.json") as resp:
-                pass
             url = f"https://storage.googleapis.com/is-now-illegal.appspot.com/gifs/{args.upper()}.gif"
             async with self.bot.session.get(url) as resp:
                 image = await resp.read()

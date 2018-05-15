@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import sys
 
+
 class Owner:
 
     def __init__(self, bot):
@@ -64,6 +65,6 @@ class Owner:
         }
         await self.bot.db.guilds.insert_one(guild_create)
         await ctx.send("DB entry regenerated.")
-
+        
 def setup(bot):
     bot.add_cog(Owner(bot))

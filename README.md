@@ -5,14 +5,14 @@
 
 ### Changelog :
 ---
-    v1.5.3
+    v2.0.0
 
-        - Added Mention prefix feature.
-        - Fixed a critical bug where user could change `_id` in settings command.
-        - Changed configuration storage from JSON to native .py for not blocking the event loop.
-        - THIS UPDATE AND THE PREVIOUS UPDATE (1.5.2) ARE BREAKING CHANGES. YOU WILL HAVE TO HOST
-          BOT AGAIN USING INSTRUCTIONS PROVIDED AT THE DISCORD SERVER.
+    - Changed the version to v2.0.0 (Now gonna comply with semantic versioning).
+    - Improved `illegal` command a bit.
+    - Added a new cog `fun.py` with a fully fledged tic tac toe game
+      that you can play with your friends!
 
+        
 ### Libraries :
 ---
     1) discord.py rewrite (https://github.com/Rapptz/discord.py)
