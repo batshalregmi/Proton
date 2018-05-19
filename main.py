@@ -16,6 +16,9 @@ for i in os.listdir(general.eventsDir):
         Cogs.append(f'{general.eventsDir}.{i.replace(".py", "")}')
 
 async def _prefix_determiner(bot, msg):
+    if msg.guild is None:
+        base = [f'<@!{bot.user.id}> ', f'<@{bot.user.id}> ', "$"]
+        return base
     try:
         prefix = bot.guildPrefixes[msg.guild.id]
     except KeyError:

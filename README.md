@@ -5,12 +5,13 @@
 
 ### Changelog :
 ---
-    v2.0.0
+    v2.0.1
 
-    - Changed the version to v2.0.0 (Now gonna comply with semantic versioning).
-    - Improved `illegal` command a bit.
-    - Added a new cog `fun.py` with a fully fledged tic tac toe game
-      that you can play with your friends!
+    - Fixed a bug where you couldn't execute commands in DM.
+    - Removed three commands for later addition. `userinfo`, `serverinfo`, `stats`.
+    - Fixed a bug in settings command where `true` wouldnt cut it for a value.
+    - Fixed a bug where a tictactoe session could be started in DM.
+    - Added a `eval` command for the owner.
 
         
 ### Libraries :

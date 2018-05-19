@@ -11,6 +11,7 @@ class Fun:
         self.sessions = set()
 
     @commands.command(name="tictactoe", aliases=["ttc"])
+    @commands.guild_only()
     async def tictactoe(self, ctx, user: discord.Member = None):
         """Play a game of Tic Tac Toe with your friend!"""
         if user is None:

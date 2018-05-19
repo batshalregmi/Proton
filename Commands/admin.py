@@ -25,9 +25,9 @@ class Admin:
             try:
                 keyToEdit = args.split(" ")[1]
                 valueToEdit = args.split(" ")[2]
-                if valueToEdit == "True":
+                if valueToEdit.lower() == "true":
                     valueToEdit = True
-                elif valueToEdit == "False":
+                elif valueToEdit.lower() == "false":
                     valueToEdit = False
                 else:
                     try:
