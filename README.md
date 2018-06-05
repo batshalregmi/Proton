@@ -5,14 +5,10 @@
 
 ### Changelog :
 ---
-    v2.0.1
+    v2.2.0
 
-    - Fixed a bug where you couldn't execute commands in DM.
-    - Removed three commands for later addition. `userinfo`, `serverinfo`, `stats`.
-    - Fixed a bug in settings command where `true` wouldnt cut it for a value.
-    - Fixed a bug where a tictactoe session could be started in DM.
-    - Added a `eval` command for the owner.
-
+    - Added `rps` command, you can now play a simple turn of rock paper scissors with the bot.
+    - Added `utilities` cog with `isgd` command, which you can use to shorten a URL.
         
 ### Libraries :
 ---

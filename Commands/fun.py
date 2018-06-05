@@ -1,5 +1,5 @@
 import asyncio
-import re
+import random
 import discord
 from discord.ext import commands
 from Utils import TicTacToeLib
@@ -10,6 +10,16 @@ class Fun:
         self.bot = bot 
         self.sessions = set()
 
+    def _parseWin(self, user, automation):
+        if automation == user:
+            return None
+        elif user == "rock":
+            return True if automation == "scissor" else False
+        elif user == "paper":
+            return True if automation == "rock" else False
+        else:
+            return True if automation == "paper" else False
+
     @commands.command(name="tictactoe", aliases=["ttc"])
     @commands.guild_only()
     async def tictactoe(self, ctx, user: discord.Member = None):
@@ -18,8 +28,8 @@ class Fun:
             return await ctx.send("Please specify whom you want to play tic tac toe with!")
         if user.bot:
             return await ctx.send("You can't play with bots.")
-        if user == ctx.author:
-            return await ctx.send("You can't challenge yourself!")
+        #if user == ctx.author:
+            #return await ctx.send("You can't challenge yourself!")
         if ctx.guild.id in self.sessions:
             return await ctx.send("A game is already being played in this server.")
         self.sessions.add(ctx.guild.id)
@@ -97,7 +107,24 @@ you accept the challenge? Reply `y` for yes and `n` for no. This will terminate 
             await ctx.send(f"Challenge declined by {message.author.mention}.")
             await embedMessage.delete()
         self.sessions.remove(ctx.guild.id)
-        
+    
+    @commands.command(name="rps")
+    async def rps(self, ctx, move: str=None):
+        """Play a turn of rock paper scissors with me.
+           Valid moves are rock, paper, scissor (case insensitive).         
+        """
+        movesTuple = ("rock", "paper", "scissor")
+        if move is None:
+            return await ctx.send("Please specify your move!")
+        elif not move.lower() in movesTuple:
+            return await ctx.send(f"Invalid move, see `{ctx.prefix}help rps` for more.")
+        rand = random.choice(movesTuple)
+        res = await self.bot.loop.run_in_executor(None, self._parseWin, move.lower(), rand)
+        if res is None:
+            return await ctx.send(f"Alas, it's a TIE! `{move} == {rand}` 😉")
+        if res:
+            return await ctx.send(f"How could I even lose to you? `{move.lower()} > {rand}` 😕")
+        await ctx.send(f"Haha, I won! `{rand} > {move.lower()}` 😄")
 
 
 def setup(bot):
