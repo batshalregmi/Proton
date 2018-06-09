@@ -5,10 +5,13 @@
 
 ### Changelog :
 ---
-    v2.2.0
+    v2.3.0
 
-    - Added `rps` command, you can now play a simple turn of rock paper scissors with the bot.
-    - Added `utilities` cog with `isgd` command, which you can use to shorten a URL.
+    - Added `stats` command in `misc` cog.
+    - Added `avatar` and `ping` commands in `utilities` cog.
+    - Switched the API used in PyPI command from Libraries.io to PyPI API.
+    - As the bot doesn't use the Libraries.io API now, the token option is removed from
+      general.py in Configuration.
         
 ### Libraries :
 ---

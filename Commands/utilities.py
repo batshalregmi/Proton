@@ -1,6 +1,7 @@
-from discord.ext import commands
-import discord
 import urllib.parse
+from datetime import datetime
+import discord
+from discord.ext import commands
 
 
 class Utilities:
@@ -18,6 +19,23 @@ class Utilities:
             return await ctx.send(embed=embed)
         embed = discord.Embed(description=f"Your shortened URL is **<{text}>**")
         await ctx.send(embed=embed)
+
+    @commands.command(name="avatar", aliases=["pfp"])
+    async def _avatar(self, ctx, *, user: discord.User = None):
+        """Displays a users avatar/profile picture."""
+        if user is None:
+            user = ctx.author
+        embed = discord.Embed(title=f"{user.name}'s Avatar")
+        embed.set_image(url=user.avatar_url)
+        await ctx.send(embed=embed)
+
+    @commands.command(name="ping", aliases=["latency"])
+    async def _ping(self, ctx):
+        """Latency and API response times."""
+        emoji = "\N{TABLE TENNIS PADDLE AND BALL}"
+        sentMessage = await ctx.send("\N{TABLE TENNIS PADDLE AND BALL} Pong! (Calculating Ping).")
+        pingInMs = int((sentMessage.created_at - ctx.message.created_at).microseconds/1000)
+        await sentMessage.edit(content=f"{emoji} Pong! **WS Latency:** `{int(self.bot.latency*1000)}`ms. **Roundtrip (User <-> Bot):** `{pingInMs}`ms.")
 
 def setup(bot):
     bot.add_cog(Utilities(bot))

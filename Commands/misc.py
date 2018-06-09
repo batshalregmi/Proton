@@ -1,14 +1,28 @@
 import urllib.parse
-import psutil
+from datetime import datetime
 from platform import python_version
-from discord.ext import commands
 import discord
+import psutil
+from discord.ext import commands
+
 
 class Misc:
 
     def __init__(self, bot):
         self.bot = bot
         self.process = psutil.Process()
+        self.smallPyPI = "https://raw.githubusercontent.com/nlhkabu/warehouse-ui/gh-pages/img/pypi-sml.png"
+    
+    def getUptime(self):
+        now = datetime.utcnow()
+        delta = now - self.bot.startTime
+        hours, rem = divmod(int(delta.total_seconds()), 3600)
+        minutes, seconds = divmod(rem, 60)
+        days, hours = divmod(hours, 24)
+        if days:
+            return f"{days} days, {hours} hr, {minutes} mins, and {seconds} secs"
+        else:
+            return f"{hours} hr, {minutes} mins, and {seconds} secs"
 
     @commands.command(name="country")
     async def _country(self, ctx, *, name: str = None):
@@ -53,35 +67,51 @@ class Misc:
             await ctx.send(embed=cn_embed)
 
     @commands.command(name="pypi")
-    async def _pypi(self, ctx, *, name: str = None):
+    async def _pypi(self, ctx, *, package: str = None):
         """Search packages on PyPI."""
-        if name is None:
-            await ctx.send("Please state a package to search.")
-            return
-        key = self.bot.LibrariesIO
-        base_url = "https://libraries.io/api/pypi/"
-        query = base_url + name
-        params = {"api_key" : key}
-        async with self.bot.session.get(query, params=params) as response:
-            if response.status != 200:
-                await ctx.send("Not a valid package or teh service may be busy.")
-                return
-            details = await response.json()
-            if len(details["normalized_licenses"]) == 0:
-                licensex = "None"
-            else:
-                licensex = details["normalized_licenses"][0]
-            if len(details["repository_url"]) == 0:
-                authorx = "--------"
-            else:
-                authorx = details["repository_url"].split("/")[3].title()
-            emb = discord.Embed(title=details["name"], description=details["description"], colour=0x2CACD5)
-            vb = "**Latest Release** : " + str(details["latest_release_number"]) + "\n**"
-            vb = vb + "License** : " + licensex + "\n**"
-            vb = vb + "Author** : " + authorx + "\n**"
-            vb = vb + "Download from PyPI** : [" + details["name"]+ "](" + details["package_manager_url"] + ")"
-            emb.add_field(name="Details", value=vb)
-            await ctx.send(embed=emb)
+        if package is None:
+            return await ctx.send("Please state a package to search.")
+        URL = f"https://pypi.org/pypi/{package}/json"
+        async with self.bot.session.get(URL) as resp:
+            if resp.status == 404:
+                return await ctx.send(f"**ERROR! The package `{package}` wasn't found.**")
+            pkgDetails = await resp.json()
+        uploadTime = pkgDetails["releases"][pkgDetails["info"]["version"]][0]["upload_time"]
+        dtUploadTime = datetime.strptime(uploadTime, "%Y-%m-%dT%H:%M:%S")
+        strUploadTime = dtUploadTime.strftime("%d/%m/%Y at %H:%M:%S")
+        description = f"""{pkgDetails["info"]["summary"]}
+**• Author:** {pkgDetails["info"]["author"]}
+**• License:** {pkgDetails["info"]["license"]}
+**• Latest Version:** {pkgDetails["info"]["version"]}
+**• Last Modified:** {strUploadTime}
+**• Project Homepage:** [Click to Visit]({pkgDetails["info"]["home_page"]})
+**• Install:** `pip install {pkgDetails["info"]["name"]}`"""
+        embed = discord.Embed(description=description)
+        embed.set_author(name=pkgDetails["info"]["name"], url=pkgDetails["info"]["project_url"], icon_url=self.smallPyPI)
+        embed.set_footer(text=f"Command powered by PyPI API - {self.bot.user.name} {datetime.utcnow().year}.", icon_url=self.bot.user.avatar_url)
+        await ctx.send(embed=embed)
+
+    @commands.command(name="stats")
+    async def _stats(self, ctx):
+        """Shows some information about the bot."""
+        ramUsage = self.process.memory_full_info().uss / 1024**2
+        cpuUsage = self.process.cpu_percent() / psutil.cpu_count()
+        general = f"""• Servers: **{len(self.bot.guilds)}**
+• Users: **{sum(1 for _ in self.bot.get_all_members())}**
+• Commands: **{len(self.bot.commands)}**"""
+        process = f"""• Memory Usage: **{ramUsage:.2f}MiB**
+• CPU Usage: **{cpuUsage:.2f}%**
+• Uptime: **{self.getUptime()}**"""     
+        system = f"""• Python: **{python_version()}**
+• discord.py: **{discord.__version__}**"""
+        embed = discord.Embed()
+        embed.set_author(name=f"{self.bot.user.name}'s Stats", icon_url=self.bot.user.avatar_url)
+        embed.set_thumbnail(url="https://www.python.org/static/community_logos/python-powered-w-200x80.png")
+        embed.set_footer(text=f"MIT License - {self.bot.user.name}, {datetime.utcnow().year}. Made by NightShade256.")
+        embed.add_field(name="❯❯ General", value=general, inline=False)
+        embed.add_field(name="❯❯ Process", value=process, inline=True)
+        embed.add_field(name="❯❯ System", value=system, inline=True)
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Misc(bot))

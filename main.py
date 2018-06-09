@@ -1,9 +1,11 @@
 import os
+from datetime import datetime
 import aiohttp
-from discord.ext import commands
 import discord
 import motor.motor_asyncio
+from discord.ext import commands
 from Configuration import general
+
 
 Cogs = []
 
@@ -38,7 +40,7 @@ class Proton(commands.Bot):
         self.db = self.DBClient["proton"]
         self.guildSettings = self.db["guilds"]
         self.guildPrefixes = {}
-        self.LibrariesIO = general.API["LibrariesIO"]
+        self.startTime = datetime.utcnow()
         for extension in Cogs:
             try:
                 self.load_extension(extension)
