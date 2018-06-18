@@ -3,6 +3,7 @@ import random
 import discord
 from discord.ext import commands
 from Utils import TicTacToeLib
+from Assets.DataLists import asciiFaces
 
 class Fun:
     
@@ -109,7 +110,7 @@ you accept the challenge? Reply `y` for yes and `n` for no. This will terminate 
         self.sessions.remove(ctx.guild.id)
     
     @commands.command(name="rps")
-    async def rps(self, ctx, move: str=None):
+    async def rps(self, ctx, move: str = None):
         """Play a turn of rock paper scissors with me.
            Valid moves are rock, paper, scissor (case insensitive).         
         """
@@ -126,6 +127,32 @@ you accept the challenge? Reply `y` for yes and `n` for no. This will terminate 
             return await ctx.send(f"How could I even lose to you? `{move.lower()} > {rand}` 😕")
         await ctx.send(f"Haha, I won! `{rand} > {move.lower()}` 😄")
 
+    @commands.command(name="cowsay")
+    async def _cowsay(self, ctx, *, text: str = None):
+        """Make a cow say what you want."""
+        if text is None:
+            return await ctx.send("Please provide some text to our cow!")
+        URL = f"http://cowsay.morecode.org/say"
+        async with self.bot.session.get(URL, params={"message": text, "format": "json"}) as resp:
+            cowSays = await resp.json()
+        if len(cowSays["cow"]) >= 2000:
+            return await ctx.send("Our cow can't understand so much text at once, please give him some smaller text.")
+        await ctx.send(f"```{cowSays['cow']}```")
+
+    @commands.command(name="chuck", aliases=["chucknorris", "norris"])
+    async def _chuckNorris(self, ctx):
+        """Get a random Chuck Norris joke."""
+        async with self.bot.session.get("http://api.icndb.com/jokes/random", params={"escape": "javascript"}) as resp:
+            joke = await resp.json()
+        embed = discord.Embed(title="Chuck Norris", description=joke["value"]["joke"], colour=0x36393E)
+        embed.set_thumbnail(url="https://assets.chucknorris.host/img/avatar/chuck-norris.png")
+        await ctx.send(embed=embed)
+        
+    @commands.command(name="asciiface", aliases=["ascii"])
+    async def _ascii(self, ctx):
+        """Get a random ASCII face."""
+        randChoice = await self.bot.loop.run_in_executor(None, random.choice, asciiFaces.asciiFaceList)
+        await ctx.send(randChoice)
 
 def setup(bot):
     bot.add_cog(Fun(bot))

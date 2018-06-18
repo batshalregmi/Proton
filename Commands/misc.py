@@ -1,3 +1,4 @@
+import random
 import urllib.parse
 from datetime import datetime
 from platform import python_version
@@ -12,6 +13,12 @@ class Misc:
         self.bot = bot
         self.process = psutil.Process()
         self.smallPyPI = "https://raw.githubusercontent.com/nlhkabu/warehouse-ui/gh-pages/img/pypi-sml.png"
+        self.factType = [
+			"trivia",
+			"year",
+			"date",
+            "math"
+        ]
     
     def getUptime(self):
         now = datetime.utcnow()
@@ -28,13 +35,12 @@ class Misc:
     async def _country(self, ctx, *, name: str = None):
         """Shows a countries information, by name."""
         if name is None:
-            return
+            return await ctx.send("Please provide a country name.")
         query = urllib.parse.quote(name)
         base_url = f"https://restcountries.eu/rest/v2/name/{query}?fullText=true"
         async with self.bot.session.get(base_url) as response:
             if response.status != 200:
-                await ctx.send("Invalid country name.")
-                return
+                return await ctx.send("Invalid country name.")
             response = await response.json()
             flag = "https://api.backendless.com/2F26DFBF-433C-51CC-FF56-830CEA93BF00/473FB5A9-D20E-8D3E-FF01-E93D9D780A00/files/CountryFlagsPng/"
             flag = flag + response[0]["alpha3Code"].lower() + ".png"
@@ -111,6 +117,24 @@ class Misc:
         embed.add_field(name="❯❯ General", value=general, inline=False)
         embed.add_field(name="❯❯ Process", value=process, inline=True)
         embed.add_field(name="❯❯ System", value=system, inline=True)
+        await ctx.send(embed=embed)
+
+    @commands.command(name="nfact", aliases=["numberfact"])
+    async def _nfact(self, ctx):
+        """Displays a fact about a random number."""
+        baseURL = f"http://numbersapi.com/random/{random.choice(self.factType)}?json"
+        async with self.bot.session.get(baseURL) as resp:
+            json = await resp.json()
+        number = str(json["number"])
+        await ctx.send(json["text"].replace(number, f"**__{number}__**"))
+
+    @commands.command(name="badge")
+    async def _badge(self, ctx, subject: str = None, status: str = None, color: str = None):
+        """Create a custom badge."""
+        if status is None or subject is None or color is None:
+            return await ctx.send("You have to provide all subject, status and color.")
+        embed = discord.Embed(color=0x36393E)
+        embed.set_image(url=f"https://img.shields.io/badge/{subject}-{status}-{color.lower()}.png")
         await ctx.send(embed=embed)
 
 def setup(bot):

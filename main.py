@@ -63,3 +63,5 @@ class Proton(commands.Bot):
             await ctx.author.send('This command cannot be used in private messages.')
         elif isinstance(error, commands.BadArgument):
             await ctx.send(error)
+        elif isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)

@@ -63,10 +63,8 @@ class Tags:
 
     @tag.command(aliases=['add'])
     async def create(self, ctx, name: TagName, *, content: commands.clean_content):
-        """Creates a new tag owned by you.
-        This tag is server-specific and cannot be used in other servers.
-        For global tags that others can use, consider using the tag box.
-        Note that server moderators can delete your tag.
+        """
+        Creates a new tag owned by you.
         """
         document = await self.bot.db.tags.find_one({"_id": ctx.author.id})
         if document is None:

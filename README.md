@@ -5,13 +5,21 @@
 
 ### Changelog :
 ---
-    v2.3.0
+    v2.4.0
 
-    - Added `stats` command in `misc` cog.
-    - Added `avatar` and `ping` commands in `utilities` cog.
-    - Switched the API used in PyPI command from Libraries.io to PyPI API.
-    - As the bot doesn't use the Libraries.io API now, the token option is removed from
-      general.py in Configuration.
+    - As discord.py now uses a newer version, of aiohttp, the requirements.txt is modified
+    - Added many new commands:
+        `fun` cog:
+            cowsay, chucknorris, asciiface.
+        `misc` cog:
+            nfact, badge.
+        `utilities.py` cog:
+            choose, hastebin, userinfo, serverinfo, channelinfo, emotes
+    - Fixed a help docstring.
+    - Added a util class to make uploading to Hastebin easier.
+    - To store all the random ascii faces for asciiface command, a new file
+      called asciiFaces.py is created in "Assets/DataLists".
+    - Added a cooldown of 15 seconds on isgd command.
         
 ### Libraries :
 ---
