@@ -27,6 +27,9 @@ class TagName(commands.clean_content):
         return converted if not self.lower else lower
 
 class Tags:
+    """
+    Contains commands to interact, create, remove tags.
+    """
 
     def __init__(self, bot):
         self.bot = bot

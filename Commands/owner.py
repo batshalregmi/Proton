@@ -8,6 +8,9 @@ from discord.ext import commands
 
 
 class Owner:
+    """
+    Contains command that can be used to alter the state of the bot, and can be only used by the owner of the bot.
+    """
 
     def __init__(self, bot):
         self.bot = bot

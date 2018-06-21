@@ -10,7 +10,10 @@ import random
 
 
 class Images:
-    
+    """
+    Contains commands for manipulation of images.
+    """
+
     def __init__(self, bot):
         self.bot = bot
         self.imageClient = ImageClient.ImageClient(bot)

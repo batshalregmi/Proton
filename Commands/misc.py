@@ -8,6 +8,9 @@ from discord.ext import commands
 
 
 class Misc:
+    """
+    Contains commands which cannot be grouped into other categories.
+    """
 
     def __init__(self, bot):
         self.bot = bot

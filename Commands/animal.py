@@ -3,6 +3,9 @@ from discord.ext import commands
 
 
 class Animals:
+    """
+    Contains commands to view random images of animals/wildlife.
+    """
 
     def __init__(self, bot):
         self.bot = bot

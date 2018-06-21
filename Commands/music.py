@@ -101,6 +101,9 @@ class MusicPlayer:
         await self.guild.voice_client.disconnect()
 
 class Music:
+    """
+    Contains commands, to join/leave voice channels, play music from Youtube and more.
+    """
 
     def __init__(self, bot):
         self.bot = bot

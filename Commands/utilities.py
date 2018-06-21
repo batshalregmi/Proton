@@ -7,6 +7,10 @@ from Utils import HastebinUploader
 from discord.ext.commands.cooldowns import BucketType
 
 class Utilities:
+    """
+    Contains commands which help you in some simple tasks.
+    """
+
 
     def __init__(self, bot):
         self.bot = bot
@@ -128,7 +132,7 @@ class Utilities:
     
     @commands.command(name="channelinfo", aliases=["cinfo", "channel"])
     async def channelinfo(self, ctx, channel: discord.TextChannel = None):
-        """Displayes information about a text channel."""
+        """Displays information about a text channel."""
         if channel is None:
             channel =  ctx.channel
         info = f"""**ID:** {channel.id}

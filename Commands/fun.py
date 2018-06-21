@@ -5,8 +5,12 @@ from discord.ext import commands
 from Utils import TicTacToeLib
 from Assets.DataLists import asciiFaces
 
+
 class Fun:
-    
+    """
+    Contains commands to have some fun with your pals.
+    """
+
     def __init__(self, bot):
         self.bot = bot 
         self.sessions = set()
