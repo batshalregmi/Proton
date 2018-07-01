@@ -3,7 +3,7 @@ import random
 from datetime import datetime
 import discord
 from discord.ext import commands
-from Utils import HastebinUploader
+from Utils import web
 from discord.ext.commands.cooldowns import BucketType
 
 class Utilities:
@@ -14,7 +14,6 @@ class Utilities:
 
     def __init__(self, bot):
         self.bot = bot
-        self.uploader = HastebinUploader.Uploader(bot)
     
     def parseServerRegion(self, serverLocation):
         if "vip" in serverLocation:
@@ -80,7 +79,7 @@ class Utilities:
                 return '\n'.join(content.split('\n')[1:-1])
             return content.strip('` \n')
 
-        url = await self.uploader.uploadText(text=_cleanup_code(text))
+        url = await web.uploadHastebin(ctx=ctx, text=_cleanup_code(text))
         embed = discord.Embed(title="HasteBin", description=f"Your file has been uploaded [here]({url})", color=0x36393E)
         await ctx.send(embed=embed)
 

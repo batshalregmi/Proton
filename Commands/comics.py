@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from Utils import ComicClient
+from Utils import comicstrip
 
 class Comics:
     """
@@ -10,7 +10,7 @@ class Comics:
 
     def __init__(self, bot):
         self.bot = bot
-        self.comicClient = ComicClient.ComicClient(bot)
+        self.comicClient = comicstrip.Client(bot)
 
     @commands.command()
     async def dilbert(self, ctx, mode: str = None):

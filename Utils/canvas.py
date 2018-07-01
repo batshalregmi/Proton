@@ -2,7 +2,9 @@ from io import BytesIO
 import discord
 from PIL import Image, ImageDraw, ImageFont
 
-class ImageClient:
+__all__ = ["Client"]
+
+class Client:
 
     def __init__(self, bot):
         self.bot = bot

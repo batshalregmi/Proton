@@ -8,7 +8,7 @@ A multipurpose Discord bot
     NightShade256
 
 :Version:
-    2.5.0
+    2.6.0
 
 :License:
     MIT
@@ -16,12 +16,9 @@ A multipurpose Discord bot
 Changelog
 ~~~~~~~~~
 
-- Add ``unban`` command in ``admin`` cog.
-- Revamp ``set`` command massively in ``admin`` cog.
-- Now help is displayed in nice embeds instead of ugly codeblocks.
-- Fix channelinfo docstring.
-- Added docstring to each ccg class to describe it.
-- Add license information in README.
+- Fix a critical bug in ``ttc`` command where, if a person didn't accept a match invitation, no further games could be played on the server.
+- Improved ``settings`` command, by using commands extension instead of naive argument parsing.
+- Improve structure of the ``Utils`` directory quite a bit.
 
 Dependencies
 ~~~~~~~~~~~~

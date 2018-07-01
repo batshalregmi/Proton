@@ -2,7 +2,7 @@ import asyncio
 import random
 import discord
 from discord.ext import commands
-from Utils import TicTacToeLib
+from Utils import games
 from Assets.DataLists import asciiFaces
 
 
@@ -33,8 +33,8 @@ class Fun:
             return await ctx.send("Please specify whom you want to play tic tac toe with!")
         if user.bot:
             return await ctx.send("You can't play with bots.")
-        #if user == ctx.author:
-            #return await ctx.send("You can't challenge yourself!")
+        if user == ctx.author:
+            return await ctx.send("You can't challenge yourself!")
         if ctx.guild.id in self.sessions:
             return await ctx.send("A game is already being played in this server.")
         self.sessions.add(ctx.guild.id)
@@ -50,13 +50,14 @@ you accept the challenge? Reply `y` for yes and `n` for no. This will terminate 
         try:
             message = await self.bot.wait_for("message", timeout=30.0, check=check_msg)
         except asyncio.TimeoutError:
-            return await ctx.send(f"{message.author.mention} took too long to respond, hence terminating.")
+            self.sessions.remove(ctx.guild.id)
+            return await ctx.send(f"{user.mention} took too long to respond, hence terminating.")
         if message.content == "y":
             await embedMessage.delete()
             winner = None
             player = (":o:", ctx.author)
             opp = (":x:", user)
-            boardActual = TicTacToeLib.Board()
+            boardActual = games.TicTacToe()
             def playerMessageCheck(msg):
                 if msg.author == player[1] and msg.channel == ctx.channel:
                     if msg.content.isdigit():

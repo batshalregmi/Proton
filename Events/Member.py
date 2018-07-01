@@ -1,6 +1,6 @@
 from io import BytesIO
 import discord
-from Utils import ImageClient
+from Utils import canvas
 import functools
 
 
@@ -8,7 +8,7 @@ class Member:
 
     def __init__(self, bot):
         self.bot = bot
-        self.imageClient = ImageClient.ImageClient(bot)
+        self.imageClient = canvas.Client(bot)
 
     async def on_member_join(self, member):
         if member.guild is None:

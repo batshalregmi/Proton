@@ -1,4 +1,4 @@
-class Board:
+class TicTacToe:
 
     def __init__(self):
         self.board = [[":one:", ":two:", ":three:"], [":four:", ":five:", ":six:"], [":seven:", ":eight:", ":nine:"]]

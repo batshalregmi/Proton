@@ -3,8 +3,9 @@ import datetime
 from bs4 import BeautifulSoup
 import functools
 
+__all__ = ["Client"]
 
-class ComicClient:
+class Client:
 
     def __init__(self, bot):
         self.bot = bot
@@ -64,8 +65,3 @@ class ComicClient:
         func = functools.partial(self.getGarfieldDate, mode)
         url = await self.bot.loop.run_in_executor(None, func)
         return url
-
-        
-            
-        
-

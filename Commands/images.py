@@ -4,9 +4,8 @@ import asyncio
 from io import BytesIO
 from discord.ext import commands
 import discord
-from Utils import ImageClient
+from Utils import canvas
 import random
-
 
 
 class Images:
@@ -16,7 +15,7 @@ class Images:
 
     def __init__(self, bot):
         self.bot = bot
-        self.imageClient = ImageClient.ImageClient(bot)
+        self.imageClient = canvas.Client(bot)
 
     @commands.command(name="illegal")
     async def illegal(self, ctx, *, args=None):
