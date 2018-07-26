@@ -20,6 +20,15 @@ Changelog
 - Improved ``settings`` command, by using commands extension instead of naive argument parsing.
 - Improve structure of the ``Utils`` directory quite a bit.
 
+ToDo
+~~~~
+
+- Change the database used from MongoDB to PostgreSQL.
+- Use Lavalink for music.
+- Rewrite the base of the bot with better error handling, package structuring, and reduced memory usage.
+
+The above mentioned rewrite is in progress, and the source will soon be published to ``Rewrite`` branch.
+
 Dependencies
 ~~~~~~~~~~~~
 
