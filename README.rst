@@ -1,5 +1,4 @@
-Proton
-======
+.. image:: https://raw.githubusercontent.com/TheDiscordians/Proton/master/Assets/Images/logo.png
 
 A multipurpose Discord bot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
